@@ -1,0 +1,19 @@
+pipeline {
+	agent {label 'ag01'} 
+	triggers {
+        githubPush()
+	}
+	stages {
+        stage('Checkout') {
+            steps {
+                 git branch: 'main', url: 'https://github.com/HariGangiah/java-example.git'
+                 
+                }
+            }
+		stage('Test') {
+			steps {
+				echo 'Webhook triggered successfully'
+				   }
+			}
+	}
+}
