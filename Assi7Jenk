@@ -19,7 +19,7 @@ pipeline {
 			}
 	stages {
 		stage('checkout') {
-			agent{label 'master'}
+			agent{label 'ag01'}
 				when{
 					anyOf{
 					branch 'main'
@@ -31,7 +31,7 @@ pipeline {
 			}
 		}
 		stage('Test') {
-			agent{label 'master'}
+			agent{label 'ag01'}
 			steps {
 				echo 'Running unit test and integration test'
 				echo "Environment Variable MY_STRING: ${My_String}"
