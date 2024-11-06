@@ -11,7 +11,6 @@ pipeline {
 		}
 			environment {
 			AWS_ACCESS_KEY=credentials('aws_access_key')
-			GITHUB_CRED=credentials('Lavi')
 			SSH_CRED=credentials('ssh_key')
 			My_String="${params.var1}"
 			My_Choice="${params.var2}"
