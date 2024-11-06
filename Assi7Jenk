@@ -1,0 +1,82 @@
+pipeline {
+	agent none
+		parameters {
+		string defaultValue: 'Hari', name: 'var1'
+		choice choices: ['Dev', 'Test', 'Prod'], description: 'Select a Choice Parameter', name: 'var2'
+		booleanParam defaultValue: true, name: 'var3'
+		}
+		triggers{
+		cron '30 * * * *'
+		pollSCM '30 * * * *'
+		}
+			environment {
+			AWS_ACCESS_KEY=credentials('aws_access_key')
+			GITHUB_CRED=credentials('Lavi')
+			SSH_CRED=credentials('ssh_key')
+			My_String="${params.var1}"
+			My_Choice="${params.var2}"
+			My_Boolean="${params.var3}"
+			}
+	stages {
+		stage('checkout') {
+			agent{label 'master'}
+				when{
+					anyOf{
+					branch 'main'
+					branch 'Dev'
+					}
+				}
+			steps {
+				git branch: 'main', url: 'https://github.com/HariGangaiah/java-example.git'
+			}
+		}
+		stage('Test') {
+			agent{label 'master'}
+			steps {
+				echo 'Running unit test and integration test'
+				echo "Environment Variable MY_STRING: ${My_String}"
+				echo "Environment Variable MY_CHOICE: ${My_Choice}"
+				echo "Environment Variable MY_BOOLEAN: ${My_Boolean}"
+			}
+		}
+		stage('Build and Global Variables') {
+			agent {label 'ag01'}
+				when {
+					expression {
+					(currentBuild.result == null || currentBuild.result == 'SUCCESS')
+					}
+				}
+			steps {
+				echo "jobname:: '$JOB_NAME'"
+				echo "build no:: '$BUILD_NUMBER'"
+				echo "job URL:: '$BUILD_URL'"
+				echo "Jenkins URL:: '$JENKINS_URL'"
+			}
+		}
+		stage('Push') {
+			agent{label 'ag01'}
+				when {
+					expression {
+					(currentBuild.result == null || currentBuild.result == 'SUCCESS')
+					}
+				}
+			steps {
+				echo 'Pusing artifact to artifactory'
+				sh 'echo $AWS_ACCESS_KEY'
+				sh 'echo USERNAME:PASSWORD:: $GITHUB_CRED'
+				sh 'echo username: $GITHUB_CRED_USR'
+				sh 'echo password: $GITHUB_CRED_PSW'
+			}
+		}
+	}
+		post {
+			always {
+				emailext body: '''
+				jobname : '$JOB_NAME'
+				build no: '$BUILD_NUMBER'
+				job URL: '$BUILD_URL'
+				build status: '$BUILD_STATUS'
+				''', subject: '$JOB_NAME' , from: 'jenkins@example.com', to:'harigangaiah01@gmail.com'
+			}
+		}
+}
