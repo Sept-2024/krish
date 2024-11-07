@@ -6,8 +6,8 @@ pipeline {
 		booleanParam defaultValue: true, name: 'var3'
 		}
 		triggers{
-		cron '/30 * * * *'
-		pollSCM '/30 * * * *'
+		cron 'H * * * *'
+		pollSCM 'H * * * *'
 		}
 			environment {
 			AWS_ACCESS_KEY=credentials('aws_access_key')
