@@ -1,5 +1,5 @@
 pipeline {
-	agent{label 'ag01'}
+	agent none
 		parameters {
 		string defaultValue: 'Hari', name: 'var1'
 		choice choices: ['Dev', 'Test', 'Prod'], description: 'Select a Choice Parameter', name: 'var2'
@@ -19,7 +19,7 @@ pipeline {
 			}
 	stages {
 		stage('checkout') {
-			
+			agent{label 'ag01'}
 				when{
 					anyOf{
 					branch 'main'
@@ -31,7 +31,7 @@ pipeline {
 			}
 		}
 		stage('Test') {
-			
+			agent{label 'ag01'}
 			steps {
 				echo 'Running unit test and integration test'
 				echo "Environment Variable MY_STRING: ${My_String}"
@@ -40,7 +40,7 @@ pipeline {
 			}
 		}
 		stage('Build and Global Variables') {
-			
+			agent{label 'ag01'}
 				when {
 					expression {
 					(currentBuild.result == null || currentBuild.result == 'SUCCESS')
@@ -54,7 +54,7 @@ pipeline {
 			}
 		}
 		stage('Push') {
-			
+			agent{label 'ag01'}
 				when {
 					expression {
 					(currentBuild.result == null || currentBuild.result == 'SUCCESS')
