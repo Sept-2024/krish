@@ -1,5 +1,5 @@
 pipeline {
-	agent{label 'ag01'}
+	agent{label 'master'}
 		parameters {
 		string defaultValue: 'Hari', name: 'var1'
 		choice choices: ['Dev', 'Test', 'Prod'], description: 'Select a Choice Parameter', name: 'var2'
@@ -23,7 +23,7 @@ pipeline {
 				when{
 					anyOf{
 					branch 'main'
-					
+					branch 'Dev'
 					}
 				}
 			steps {
