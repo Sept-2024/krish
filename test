@@ -1,2 +1,2 @@
 echo "Changes Configured"
-echo "Checking for the trigger after jenkins URL was changed"
+echo "Checking for the trigger after jenkins URL changed"
