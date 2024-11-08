@@ -28,6 +28,7 @@ pipeline {
 				}
 			steps {
 				git branch: 'main', url: 'https://github.com/HariGangaiah/java-example.git'
+				echo "Checking the trigger"
 			}
 		}
 		stage('Test') {
